@@ -54,10 +54,9 @@ export default async function handler(req, res) {
         return;
     }
 
-    if (!idToken) {
-        return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
-    }
-
+    // if (!idToken) {
+    //     return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });
+    // }
 
     // Signing In Block
     if (req.method === "POST") {
@@ -68,12 +67,12 @@ export default async function handler(req, res) {
             const message = email || password 
             ? `Welcome, ${newUser?.user?.displayName.split(" ")[0]}` : "Welcome, guest";
     
-            res.status(200).json({ message: message });
             console.log(message);
+            return res.status(200).json({ message: message });
         } catch (error) {
-            res.json({ error: `Error: ${error.message}` });
+            return res.json({ error: `Error: ${error.message}` });
         }
-    } else res.status(405).json({ error: "Method not allowed" });
+    }
 
 
     // Fetching User Data Block
@@ -100,12 +99,12 @@ export default async function handler(req, res) {
             };
 
 
-            res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
+            return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
             console.log(fetchedData);
         } catch (error) {
-            res.json({ error: `Couldn't fetch Data. Error: ${error.message}` });
+            return res.json({ error: `Couldn't fetch Data. Error: ${error.message}` });
         }
-    } else res.status(405).json({ error: "Method not allowed" });
+    }
 }
 
 
