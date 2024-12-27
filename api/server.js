@@ -92,6 +92,7 @@ export default async function handler(req, res) {
                 currentlyLoggedInUser: currentlyLoggedInUser
             };
 
+
             res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
             console.log(fetchedData);
         } catch (error) {
