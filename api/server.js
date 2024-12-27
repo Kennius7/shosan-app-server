@@ -8,7 +8,8 @@ require('dotenv').config();
 
 const admin = require("firebase-admin");
 
-const serviceAccount = require("../shosan-acodemia-app-firebase-adminsdk-y3xc9-5128ebd3c2.json");
+// const serviceAccount = require("../shosan-acodemia-app-firebase-adminsdk-y3xc9-5128ebd3c2.json");
+
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert({
