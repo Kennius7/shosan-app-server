@@ -1,6 +1,6 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { db, auth } from "../FirebaseConfig.js";
-import { useAuthState } from "react-firebase-hooks/auth";
+const { signInWithEmailAndPassword } = require("firebase/auth");
+const { db, auth } = require("../FirebaseConfig.js");
+const { useAuthState } = require("react-firebase-hooks/auth");
 
 
 
