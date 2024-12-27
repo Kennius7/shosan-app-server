@@ -99,8 +99,8 @@ export default async function handler(req, res) {
             };
 
 
-            return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
             console.log(fetchedData);
+            return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
         } catch (error) {
             return res.json({ error: `Couldn't fetch Data. Error: ${error.message}` });
         }
