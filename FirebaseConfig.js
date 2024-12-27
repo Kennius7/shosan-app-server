@@ -4,7 +4,7 @@ const { getAuth, GoogleAuthProvider } = require("firebase/auth");
 const { getFirestore } = require("firebase/firestore");
 const { getStorage } = require("firebase/storage");
 // const { dotenv } = require("dotenv");
-require('dotenv').config()
+require('dotenv').config();
 // import { getAnalytics } from "firebase/analytics";
 
 
@@ -16,12 +16,12 @@ require('dotenv').config()
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.VITE_API_KEY,
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "shosan-acodemia-app.firebaseapp.com",
   projectId: "shosan-acodemia-app",
   storageBucket: "shosan-acodemia-app.firebasestorage.app",
-  messagingSenderId: process.env.VITE_MESSAGING_SENDERID,
-  appId: process.env.VITE_APP_ID,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDERID,
+  appId: process.env.FIREBASE_APP_ID,
   measurementId: "G-ZXK5YT4PBN"
 };
 

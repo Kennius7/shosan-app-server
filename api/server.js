@@ -4,12 +4,18 @@ const { useAuthState } = require("react-firebase-hooks/auth");
 
 
 
+require('dotenv').config();
+
 const admin = require("firebase-admin");
 
 const serviceAccount = require("../shosan-acodemia-app-firebase-adminsdk-y3xc9-5128ebd3c2.json");
 if (!admin.apps.length) {
     admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
+        credential: admin.credential.cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            privateKey: process.env.FIREBASE_SERVICE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        }),
         databaseURL: 'https://shosan-acodemia-app.firebaseio.com', // Replace with your database URL
     });
 }
