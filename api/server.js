@@ -23,6 +23,7 @@ export default async function handler(req, res) {
             ? `Welcome, ${newUser?.user?.displayName.split(" ")[0]}` : "Welcome, guest";
     
             res.status(200).json({ message: message });
+            console.log(message);
         } catch (error) {
             res.json({ error: `Error: ${error.message}` });
         }
