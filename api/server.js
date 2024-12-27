@@ -1,14 +1,11 @@
 const { signInWithEmailAndPassword } = require("firebase/auth");
 const { db, auth } = require("../FirebaseConfig.js");
-// const { useAuthState } = require("react-firebase-hooks/auth");
-
-
-
 require('dotenv').config();
 
-const admin = require("firebase-admin");
 
-// const serviceAccount = require("../shosan-acodemia-app-firebase-adminsdk-y3xc9-5128ebd3c2.json");
+
+
+const admin = require("firebase-admin");
 
 if (!admin.apps.length) {
     admin.initializeApp({
@@ -17,10 +14,9 @@ if (!admin.apps.length) {
             clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
             privateKey: process.env.FIREBASE_SERVICE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         }),
-        databaseURL: 'https://shosan-acodemia-app.firebaseio.com', // Replace with your database URL
+        databaseURL: 'https://shosan-acodemia-app.firebaseio.com',
     });
 }
-// admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
 
 async function verifyToken(idToken) {
@@ -45,6 +41,7 @@ export default async function handler(req, res) {
     console.log("Checking...");
     // const [ currentlyLoggedInUser ] = useAuthState(auth);
     const idToken = req.headers.authorization?.split('Bearer ')[1];
+    console.log("ID Token :>>>>", idToken);
 
     if (req.method === "OPTIONS") {
         res.setHeader("Access-Control-Allow-Origin", "*");
