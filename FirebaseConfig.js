@@ -1,13 +1,14 @@
 /* eslint-disable no-undef */
-const { initializeApp } = require("firebase/app");
-const { getAuth, GoogleAuthProvider } = require("firebase/auth");
-const { getFirestore } = require("firebase/firestore");
-const { getStorage } = require("firebase/storage");
-const { dotenv } = require("dotenv");
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+// const { dotenv } from require("dotenv");
+require('dotenv').config()
 // import { getAnalytics } from "firebase/analytics";
 
 
-dotenv.config();
+// dotenv.config();
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
