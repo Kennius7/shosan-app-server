@@ -1,6 +1,6 @@
 const { signInWithEmailAndPassword } = require("firebase/auth");
 const { db, auth } = require("../FirebaseConfig.js");
-const { useAuthState } = require("react-firebase-hooks/auth");
+// const { useAuthState } = require("react-firebase-hooks/auth");
 
 
 
@@ -43,7 +43,7 @@ async function verifyToken(idToken) {
 
 export default async function handler(req, res) {
     console.log("Checking...");
-    const [ currentlyLoggedInUser ] = useAuthState(auth);
+    // const [ currentlyLoggedInUser ] = useAuthState(auth);
     const idToken = req.headers.authorization?.split('Bearer ')[1];
 
     if (req.method === "OPTIONS") {
