@@ -1,0 +1,16 @@
+{
+  "name": "shosan-app-server",
+  "version": "1.0.0",
+  "description": "It is a server for the Shosan Code Hub web App.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kenny Ogbogu",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "firebase": "^11.1.0",
+    "react-firebase-hooks": "^5.1.1"
+  }
+}
