@@ -52,6 +52,7 @@ export default async function handler(req, res) {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        console.log("Checking...", res);
         return res.status(401).json({ success: false, message: 'Unauthorized: Missing or malformed token' });
     }
 
@@ -64,6 +65,7 @@ export default async function handler(req, res) {
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         res.status(200).end();
+        console.log("Checking...", res);
         return;
     }
 
@@ -94,6 +96,7 @@ export default async function handler(req, res) {
             console.log(fetchedData);
             return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
         } catch (error) {
+            console.log("Checking...", res);
             return res.json({ error: `Couldn't fetch Data. Error: ${error.message}` });
         }
     }

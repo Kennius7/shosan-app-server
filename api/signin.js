@@ -46,12 +46,14 @@ export default async function handler(req, res) {
     console.log("Checking...");
 
     if (req.method !== 'POST' || req.method !== 'GET' || req.method !== 'OPTIONS') {
+        console.log("Checking...", res);
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
     
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        console.log("Checking...", res);
         return res.status(401).json({ success: false, message: 'Unauthorized: Missing or malformed token' });
     }
 
@@ -64,6 +66,7 @@ export default async function handler(req, res) {
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         res.status(200).end();
+        console.log("Checking...", res);
         return;
     }
 
@@ -79,6 +82,7 @@ export default async function handler(req, res) {
             console.log(message);
             return res.status(200).json({ message: message });
         } catch (error) {
+            console.log("Checking...", res);
             return res.json({ error: `Error: ${error.message}` });
         }
     }
