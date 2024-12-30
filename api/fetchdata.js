@@ -1,9 +1,12 @@
 const { signInWithEmailAndPassword } = require("firebase/auth");
+const { query, collection, where, getDocs } = require("firebase/firestore");
 const { db, auth } = require("../FirebaseConfig.js");
+const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 
 
+const shosanAppSecretKey = process.env.SHOSAN_APP_SECRET_KEY;
 
 const admin = require("firebase-admin");
 
@@ -18,65 +21,56 @@ if (!admin.apps.length) {
     });
 }
 
+function authenticateToken(req, res, next) {
+    const token = req.headers['authorization'];
+    if (!token) { return res.status(401).send("Access Denied!") }
 
-async function verifyToken(idToken) {
-
-    if (!idToken || typeof idToken !== 'string') {
-        throw new Error('Invalid or missing token');
-    }
-
-    try {
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
-        const userRecord = await admin.auth().getUser(decodedToken.uid);
-
-        return {
-            userId: userRecord.uid,
-            email: userRecord.email,
-            displayName: userRecord.displayName,
-            photoURL: userRecord.photoURL,
-        };
-    } catch (error) {
-        console.error('Error verifying token:', error);
-        throw new Error('Invalid token');
-    }
+    jwt.verify(token, shosanAppSecretKey, (err, user) => {
+        if (err) return res.status(403).send("Invalid Token!");
+        req.user = user;
+        console.log("Req User: >>>>>", req.user);
+        next();
+    })
 }
-
 
 export default async function handler(req, res) {
     console.log("Checking...");
-
-    if (req.method !== 'POST' || req.method !== 'GET' || req.method !== 'OPTIONS') {
-        return res.status(405).json({ success: false, message: 'Method not allowed' });
-    }
-    
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        console.log("Checking...", res);
-        return res.status(401).json({ success: false, message: 'Unauthorized: Missing or malformed token' });
-    }
-
-    const idToken = authHeader.split('Bearer ')[1];
-
-    console.log("ID Token :>>>>", idToken);
 
     if (req.method === "OPTIONS") {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         res.status(200).end();
-        console.log("Checking...", res);
+        console.log("Checking OPTIONS Method...", res.statusCode);
         return;
     }
 
-
     // Fetching User Data Block
     if (req.method === "GET") {
+        // const token = req.headers['authorization'];
+        // const idToken = authHeader.split('Bearer ')[1];
+
+        const token = req.headers.authorization.split('Bearer ')[1];
+
+        if (!token) { return res.status(401).send("Access Denied!") };
+
+        const user = jwt.verify(token, shosanAppSecretKey, (err, user) => {
+            if (err) return res.status(403).send("Invalid Token!");
+            req.user = user;
+            const userData = req.user;
+            console.log("Req User: >>>>>", req.user);
+            return userData;
+        })
+
+        console.log("User from Token: >>>> ", user);
+
         try {
             // const userEmail = currentlyLoggedInUser?.email;
-            const userData = await verifyToken(idToken);
-            const userEmail = userData.email;
+            // const userData = await verifyToken(idToken);
+            const userEmail = user.email;
+
             console.log("Current User Email: ", userEmail);
+            console.log("User: >>>>>", user);
             const q = query(collection(db, "User_Data"), where("email", "==", userEmail));
             const querySnapshot = await getDocs(q);
             const filteredData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -90,15 +84,18 @@ export default async function handler(req, res) {
                 courseDetails: courseDetails, 
                 courseProgress: courseProgress,
                 id: id,
-                currentlyLoggedInUser: currentlyLoggedInUser
             };
 
             console.log(fetchedData);
             return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
         } catch (error) {
-            console.log("Checking...", res);
+            console.log("Checking ERROR FETCHING...", res.statusCode, error.message);
             return res.json({ error: `Couldn't fetch Data. Error: ${error.message}` });
         }
+    }
+
+    if (req.method !== 'POST' || req.method !== 'GET' || req.method !== 'OPTIONS') {
+        return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 }
 
