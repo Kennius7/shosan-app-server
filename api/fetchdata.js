@@ -1,6 +1,5 @@
-const { signInWithEmailAndPassword } = require("firebase/auth");
 const { query, collection, where, getDocs } = require("firebase/firestore");
-const { db, auth } = require("../FirebaseConfig.js");
+const { db } = require("../FirebaseConfig.js");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
@@ -21,18 +20,6 @@ if (!admin.apps.length) {
     });
 }
 
-function authenticateToken(req, res, next) {
-    const token = req.headers['authorization'];
-    if (!token) { return res.status(401).send("Access Denied!") }
-
-    jwt.verify(token, shosanAppSecretKey, (err, user) => {
-        if (err) return res.status(403).send("Invalid Token!");
-        req.user = user;
-        console.log("Req User: >>>>>", req.user);
-        next();
-    })
-}
-
 export default async function handler(req, res) {
     console.log("Checking...");
     
@@ -48,29 +35,18 @@ export default async function handler(req, res) {
 
     // Fetching User Data Block
     if (req.method === "GET") {
-        // const token = req.headers['authorization'];
-        // const idToken = authHeader.split('Bearer ')[1];
-
         const token = req.headers.authorization.split('Bearer ')[1];
-
         if (!token) { return res.status(401).send("Access Denied!") };
 
         const user = jwt.verify(token, shosanAppSecretKey, (err, user) => {
             if (err) return res.status(403).send("Invalid Token!");
             req.user = user;
             const userData = req.user;
-            console.log("Req User: >>>>>", req.user);
             return userData;
         })
 
-        console.log("User from Token: >>>> ", user);
-
         try {
-            // const userEmail = currentlyLoggedInUser?.email;
-            // const userData = await verifyToken(idToken);
             const userEmail = user.email;
-
-            console.log("Current User Email: ", userEmail);
             console.log("User: >>>>>", user);
             const q = query(collection(db, "User_Data"), where("email", "==", userEmail));
             const querySnapshot = await getDocs(q);
