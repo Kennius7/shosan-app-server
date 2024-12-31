@@ -20,11 +20,13 @@ export default async function handler(req, res) {
 
     // Fetching Date Block
     if (req.method === "GET") {
-        const getDateRef = doc(db, "Current_Date", "date-document");
-        const fetchDateData = await getDoc(getDateRef);
-        if (fetchDateData.data().date) {
-            return res.status(200).json({ success: true, date: fetchDateData.data().date.toString() });
-        } else {
+        try {
+            const getDateRef = doc(db, "Current_Date", "date-document");
+            const fetchDateData = await getDoc(getDateRef);
+            const date = fetchDateData.data().date;
+            return res.status(200).json({ success: true, date: date });
+        } catch (error) {
+            console.log("Error getting Date: >>>>", error);
             return res.status(404).json({ success: false, msg: "Date not found" });
         }
     }
