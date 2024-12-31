@@ -23,9 +23,9 @@ export default async function handler(req, res) {
         const getDateRef = doc(db, "Current_Date", "date-document");
         const fetchDateData = await getDoc(getDateRef);
         if (fetchDateData.data().date) {
-            res.status(200).json({ success: true, date: fetchDateData.data().date.toString() });
+            return res.status(200).json({ success: true, date: fetchDateData.data().date.toString() });
         } else {
-            res.status(404).json({ success: false, msg: "Date not found" });
+            return res.status(404).json({ success: false, msg: "Date not found" });
         }
     }
 
@@ -34,10 +34,10 @@ export default async function handler(req, res) {
         const updatedDate = req.body.date;
         await setDoc(doc(db, "Current_Date", "date-document"), { date: updatedDate })
         .then(()=>{
-            res.status(200).json({ success: true, msg: "Date Updated Successfully" })
+            return res.status(200).json({ success: true, msg: "Date Updated Successfully" })
         })
         .catch((error)=>{
-            res.status(500).json({ success: false, msg: `Error updating Date: ${error}` })
+            return res.status(500).json({ success: false, msg: `Error updating Date: ${error}` })
         })
     }
 
