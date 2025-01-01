@@ -13,8 +13,8 @@ const emailTransporter = (data, res) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail', // e.g., 'gmail'
         auth: {
-            user: userEmail,
-            pass: userPassword,
+            user: "shosanacodemia@gmail.com",
+            pass: "mgkr dhey vfry zdrc",
         },
         tls: {
             rejectUnauthorized: false,
@@ -34,8 +34,8 @@ const emailTransporter = (data, res) => {
     `;
 
     const mailOptions = {
-        from: userEmail,
-        to: userEmail,
+        from: "shosanacodemia@gmail.com",
+        to: "shosanacodemia@gmail.com",
         subject: data.subject,
         html: htmlEmail,
     }
@@ -43,7 +43,6 @@ const emailTransporter = (data, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error(error);
-            errorData = error;
             return res.status(500).json({ 
                 success: false, 
                 timeoutMessage: "Error: Request Timed Out. Check your network and try again.",
@@ -51,7 +50,6 @@ const emailTransporter = (data, res) => {
             });
         } else {
             console.log('Email sent: ' + info.response);
-            infoData = info;
             return res.status(200).json({ 
             success: true, 
             emailMessage: `Email sent successfully: ${info.response}`, 
