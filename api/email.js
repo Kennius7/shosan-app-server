@@ -40,6 +40,8 @@ const emailTransporter = (data, res) => {
         html: htmlEmail,
     }
 
+    console.log(htmlEmail, mailOptions);
+
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error(error);
