@@ -6,6 +6,7 @@ require('dotenv').config();
 const userEmail = process.env.NODEMAILER_USER_EMAIL;
 const userPassword = process.env.NODEMAILER_USER_PASSWORD;
 
+console.log(userEmail, userPassword);
 
 
 const emailTransporter = (data, res) => {
