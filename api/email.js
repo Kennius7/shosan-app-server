@@ -7,6 +7,7 @@ const userEmail = process.env.NODEMAILER_USER_EMAIL;
 const userPassword = process.env.NODEMAILER_USER_PASSWORD;
 
 
+
 const emailTransporter = (data, res) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail', // e.g., 'gmail'
