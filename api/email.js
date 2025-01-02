@@ -2,69 +2,8 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 
-
 const userEmail = process.env.NODEMAILER_USER_EMAIL;
 const userPassword = process.env.NODEMAILER_USER_PASSWORD;
-
-// console.log(userEmail, userPassword);
-
-
-const emailTransporter = (data, res) => {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: userEmail,
-            pass: userPassword,
-        },
-        tls: {
-            rejectUnauthorized: false,
-        },
-    });
-
-    const htmlEmail = `
-        <html>
-            <body>
-                <p>${data.name} just sent an email.</p>
-                <p>Phone/WhatSapp number: ${data.number}</p>
-                <p>Email address: ${data.email}</p>
-                <p>Email Subject Header: ${data.subject}</p>
-                <p>Email: ${data.message}</p>
-            </body>
-        </html>
-    `;
-
-    const mailOptions = {
-        from: userEmail,
-        to: userEmail,
-        subject: data.subject,
-        html: htmlEmail,
-    }
-
-    transporter.verify((error, success) => {
-        if (error) {
-            console.log("Error in Email config: ", error);
-        } else { console.log("Gmail Transporter is ready to send emails") }
-    })
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error(error);
-            return res.status(500).json({ 
-                success: false, 
-                timeoutMessage: "Error: Request Timed Out. Check your network and try again.",
-                errorMessage: "Error: Registration Failed.",
-            });
-        } else {
-            console.log('Email sent: ' + info.response);
-            return res.status(200).json({ 
-            success: true, 
-            emailMessage: `Email sent successfully: ${info.response}`, 
-            formMessage: 'Registration successful.'
-            });
-        }
-    });
-}
-
 
 
 export default async function handler(req, res) {
@@ -80,11 +19,44 @@ export default async function handler(req, res) {
         return;
     }
 
-      // Sending Email Block
     if (req.method === "POST") {
+        const formData = req.body;
+        const { name, email, number, subject, message } = formData;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: userEmail,
+                pass: userPassword,
+            },
+            tls: {
+                rejectUnauthorized: false,
+            },
+        });
+    
+        const htmlEmail = `
+            <html>
+                <body>
+                    <p>${name.split(" ")[0]} just sent an email.</p>
+                    <p>Phone number: ${number}</p>
+                    <p>Email address: ${email}</p>
+                    <p>Email Subject Header: ${subject}</p>
+                    <p>Email: ${message}</p>
+                </body>
+            </html>
+        `;
+    
+        const mailOptions = {
+            from: userEmail,
+            to: userEmail,
+            subject: subject,
+            html: htmlEmail,
+        }
+
         try {
-            const formData = req.body;
-            emailTransporter(formData, res);
+            const info = await transporter.sendMail(mailOptions);
+            console.log("Got here...");
+            console.log("Email sent: >>>>", info.response);
             return res.status(200).json({ success: true, message: 'Email sent successfully' });
         } catch (error) {
             console.error("Error: ", error);
