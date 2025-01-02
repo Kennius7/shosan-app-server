@@ -6,15 +6,15 @@ require('dotenv').config();
 const userEmail = process.env.NODEMAILER_USER_EMAIL;
 const userPassword = process.env.NODEMAILER_USER_PASSWORD;
 
-console.log(userEmail, userPassword);
+// console.log(userEmail, userPassword);
 
 
 const emailTransporter = (data, res) => {
     const transporter = nodemailer.createTransport({
-        service: 'gmail', // e.g., 'gmail'
+        service: 'gmail',
         auth: {
-            user: "shosanacodemia@gmail.com",
-            pass: "mgkr dhey vfry zdrc",
+            user: userEmail,
+            pass: userPassword,
         },
         tls: {
             rejectUnauthorized: false,
@@ -34,13 +34,17 @@ const emailTransporter = (data, res) => {
     `;
 
     const mailOptions = {
-        from: "shosanacodemia@gmail.com",
-        to: "shosanacodemia@gmail.com",
+        from: userEmail,
+        to: userEmail,
         subject: data.subject,
         html: htmlEmail,
     }
 
-    console.log(htmlEmail, mailOptions);
+    transporter.verify((error, success) => {
+        if (error) {
+            console.log("Error in Email config: ", error);
+        } else { console.log("Gmail Transporter is ready to send emails") }
+    })
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
