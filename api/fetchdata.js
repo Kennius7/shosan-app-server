@@ -71,7 +71,7 @@ export default async function handler(req, res) {
         }
     }
 
-    if (req.method !== 'POST' || req.method !== 'GET' || req.method !== 'OPTIONS') {
+    if (!['POST', 'GET', 'OPTIONS'].includes(req.method)) {
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 }
