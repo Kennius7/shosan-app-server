@@ -20,6 +20,12 @@ if (!admin.apps.length) {
     });
 }
 
+console.log("Firebase Admin Config: ", {
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_SERVICE_PRIVATE_KEY ? "Loaded" : "Missing",
+});
+
 
 export default async function handler(req, res) {
     console.log("Checking...");
