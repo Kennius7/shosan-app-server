@@ -43,6 +43,7 @@ export default async function handler(req, res) {
             console.log("Token: >>>", token, "User Info: >>>", userInfo);
 
             const newUser = await signInWithEmailAndPassword(auth, email, password);
+            console.log("Logged In User:>>>>>", newUser,);
             const message = `Welcome, ${newUser?.user?.displayName.split(" ")[0]}`;
             console.log(message);
             return res.status(200).json({ message: message, token: token });
