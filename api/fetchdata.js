@@ -70,20 +70,14 @@ export default async function handler(req, res) {
             console.log("User: >>>>>", user);
             const q = query(collection(db, "User_Data"), where("email", "==", userEmail));
             const querySnapshot = await getDocs(q);
+            if (querySnapshot.empty) {
+                console.log("User not found.");
+                return res.status(404).json({ error: "User not found." });
+            }
             const filteredData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log("Filtered Data: ", filteredData);
+            // console.log("Filtered Data: ", filteredData);
             const { name, email, number, batchNum, courseDetails, courseProgress, id, profilePics } = filteredData[0];
-            const fetchedData = {
-                name: name, 
-                email: email, 
-                number: number, 
-                batchNum: batchNum, 
-                courseDetails: courseDetails, 
-                courseProgress: courseProgress,
-                id: id,
-                profilePics: profilePics,
-            };
-
+            const fetchedData = { name, email, number, batchNum, courseDetails, courseProgress, id, profilePics };
             console.log("Fetched Data: ", fetchedData);
             return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
         } catch (error) {
