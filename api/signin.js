@@ -1,13 +1,8 @@
 const { signInWithEmailAndPassword } = require("firebase/auth");
-const { auth } = require("../FirebaseConfig.js");
 const jwt = require("jsonwebtoken");
-
-require('dotenv').config();
-
-
 const shosanAppSecretKey = process.env.SHOSAN_APP_SECRET_KEY;
-
 const admin = require("firebase-admin");
+require('dotenv').config();
 
 if (!admin.apps.length) {
     admin.initializeApp({
@@ -20,6 +15,7 @@ if (!admin.apps.length) {
     });
 }
 
+const { auth } = require("../FirebaseConfig.js");
 
 
 export default async function handler(req, res) {
