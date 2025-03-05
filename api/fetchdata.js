@@ -36,10 +36,16 @@ export default async function handler(req, res) {
     // Fetching User Data Block
     if (req.method === "GET") {
         const token = req.headers.authorization.split('Bearer ')[1];
-        if (!token) { return res.status(401).send("Access Denied!") };
+        if (!token) { 
+            console.log(req.headers, "Access Denied!");
+            return res.status(401).send("Access Denied!") 
+        };
 
         const user = jwt.verify(token, shosanAppSecretKey, (err, user) => {
-            if (err) return res.status(403).send("Invalid Token!");
+            if (err) {
+                console.log(err, "Invalid Token!");
+                return res.status(403).send("Invalid Token!")
+            }
             req.user = user;
             const userData = req.user;
             return userData;
@@ -64,7 +70,7 @@ export default async function handler(req, res) {
                 profilePics: profilePics,
             };
 
-            console.log(fetchedData);
+            console.log("Fetched Data: ", fetchedData);
             return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
         } catch (error) {
             console.log("Checking ERROR FETCHING...", res.statusCode, error.message);
