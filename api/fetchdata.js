@@ -36,6 +36,7 @@ export default async function handler(req, res) {
     // Fetching User Data Block
     if (req.method === "GET") {
         const token = req.headers.authorization.split('Bearer ')[1];
+        console.log("Token:>>>>", token);
         if (!token) { 
             console.log(req.headers, "Access Denied!");
             return res.status(401).send("Access Denied!") 
