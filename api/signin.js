@@ -20,16 +20,11 @@ if (!admin.apps.length) {
     });
 }
 
-console.log("Firebase Admin Config: ", {
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_SERVICE_PRIVATE_KEY ? "Loaded" : "Missing",
-});
 
 
 export default async function handler(req, res) {
     console.log("Checking...");
-
+    
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -39,9 +34,14 @@ export default async function handler(req, res) {
         console.log("Checking OPTIONS Method...", res.statusCode);
         return;
     }
-
+    
     // Signing In Block
     if (req.method === "POST") {
+        console.log("Firebase Admin Config: ", {
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            privateKey: process.env.FIREBASE_SERVICE_PRIVATE_KEY ? "Loaded" : "Missing",
+        });
         try {
             const { email, password } = req.body;
             const userInfo = { email: email };
