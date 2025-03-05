@@ -47,7 +47,7 @@ export default async function handler(req, res) {
             console.log(message);
             return res.status(200).json({ message: message, token: token });
         } catch (error) {
-            console.log("Checking POST Method ERROR...", res.statusCode);
+            console.log("Checking POST Method ERROR...", res.statusCode, error);
             return res.json({ error: `Error: ${error.message}` });
         }
     }
