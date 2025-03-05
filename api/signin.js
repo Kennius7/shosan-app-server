@@ -37,6 +37,9 @@ export default async function handler(req, res) {
     
     // Signing In Block
     if (req.method === "POST") {
+        // ✅ Debug Firebase Auth instance
+        console.log("Auth Instance: ", auth);
+
         console.log("Firebase Admin Config: ", {
             projectId: process.env.FIREBASE_PROJECT_ID,
             clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
@@ -44,18 +47,39 @@ export default async function handler(req, res) {
         });
         try {
             const { email, password } = req.body;
-            const userInfo = { email: email };
+
+            if (!email || !password) {
+                console.log("Missing email or password");
+                return res.status(400).json({ error: "Email and password are required" });
+            }
+
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            if (!user) {
+                return res.status(401).json({ error: "Invalid email or password" });
+            }
+            // const userInfo = { email: email };
+            const userInfo = { email: user.email, uid: user.uid };
             const token = jwt.sign(userInfo, shosanAppSecretKey, { expiresIn: "1h" });
             console.log("Token: >>>", token, "User Info: >>>", userInfo);
 
-            const newUser = await signInWithEmailAndPassword(auth, email, password);
-            console.log("Logged In User:>>>>>", newUser,);
-            const message = `Welcome, ${newUser?.user?.displayName.split(" ")[0]}`;
+            // const newUser = await signInWithEmailAndPassword(auth, email, password);
+            // console.log("Logged In User:>>>>>", newUser,);
+            const message = `Welcome, ${user?.displayName.split(" ")[0]}`;
             console.log(message);
             return res.status(200).json({ message: message, token: token });
         } catch (error) {
             console.log("Checking POST Method ERROR...", res.statusCode, error);
-            return res.json({ error: `Error: ${error.message}` });
+            console.error("Firebase Auth Error:", error.message);
+            
+            // Handle specific Firebase Auth errors
+            if (error.code === "auth/invalid-credential") {
+                return res.status(401).json({ error: "Invalid email or password" });
+            }
+
+            return res.status(500).json({ error: `Authentication failed: ${error.message}` });
+            // return res.json({ error: `Error: ${error.message}` });
         }
     }
 
