@@ -52,7 +52,6 @@ export default async function handler(req, res) {
             const token = jwt.sign(userInfo, shosanAppSecretKey, { expiresIn: "1h" });
             console.log("Token: >>>", token, "User Info: >>>", userInfo);
 
-            console.log("Logged In User:>>>>>", newUser,);
             const message = `Welcome, ${user?.displayName.split(" ")[0]}`;
             console.log(message);
             return res.status(200).json({ message: message, token: token });
