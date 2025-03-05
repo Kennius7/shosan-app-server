@@ -41,15 +41,29 @@ export default async function handler(req, res) {
             return res.status(401).send("Access Denied!") 
         };
 
-        const user = jwt.verify(token, shosanAppSecretKey, (err, user) => {
-            if (err) {
-                console.log(err, "Invalid Token!");
-                return res.status(403).send("Invalid Token!")
-            }
-            req.user = user;
-            const userData = req.user;
-            return userData;
-        })
+        // const user = jwt.verify(token, shosanAppSecretKey, (err, user) => {
+        //     if (err) {
+        //         console.log(err, "Invalid Token!");
+        //         return res.status(403).send("Invalid Token!")
+        //     }
+        //     req.user = user;
+        //     const userData = req.user;
+        //     return userData;
+        // })
+
+        let user;
+        try {
+            user = jwt.verify(token, shosanAppSecretKey);
+        } catch (err) {
+            console.error("Invalid Token:", err.message);
+            return res.status(403).json({ error: "Invalid Token!" });
+        }
+        req.user = user;
+
+        if (!user || !user.email) {
+            console.log("Invalid Token! User data missing.");
+            return res.status(403).json({ error: "Invalid Token! User data missing." });
+        }
 
         try {
             const userEmail = user.email;
