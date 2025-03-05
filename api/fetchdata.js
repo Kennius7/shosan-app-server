@@ -88,7 +88,7 @@ export default async function handler(req, res) {
             return res.status(200).json({ data: fetchedData, message: "Data was fetched successfully" });
         } catch (error) {
             console.log("Checking ERROR FETCHING...", res.statusCode, error.message);
-            return res.json({ error: `Couldn't fetch Data. Error: ${error.message}` });
+            return res.status(500).json({ error: `Couldn't fetch Data. Error: ${error.message}` });
         }
     }
 
